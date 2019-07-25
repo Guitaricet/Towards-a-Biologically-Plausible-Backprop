@@ -4,6 +4,7 @@ import sys
 from sys import stdout
 import time
 
+
 def train_net(net):
 
     path         = net.path
@@ -16,30 +17,30 @@ def train_net(net):
     beta         = net.hyperparameters["beta"]
     alphas       = net.hyperparameters["alphas"]
 
-    print "name = %s" % (path)
-    print "architecture = 784-"+"-".join([str(n) for n in hidden_sizes])+"-10"
-    print "number of epochs = %i" % (n_epochs)
-    print "batch_size = %i" % (batch_size)
-    print "n_it_neg = %i"   % (n_it_neg)
-    print "n_it_pos = %i"   % (n_it_pos)
-    print "epsilon = %.1f" % (epsilon)
-    print "beta = %.1f" % (beta)
-    print "learning rates: "+" ".join(["alpha_W%i=%.3f" % (k+1,alpha) for k,alpha in enumerate(alphas)])+"\n"
+    print("name = %s" % (path))
+    print("architecture = 784-"+"-".join([str(n) for n in hidden_sizes])+"-10")
+    print("number of epochs = %i" % (n_epochs))
+    print("batch_size = %i" % (batch_size))
+    print("n_it_neg = %i"   % (n_it_neg))
+    print("n_it_pos = %i"   % (n_it_pos))
+    print("epsilon = %.1f" % (epsilon))
+    print("beta = %.1f" % (beta))
+    print("learning rates: "+" ".join(["alpha_W%i=%.3f" % (k+1,alpha) for k,alpha in enumerate(alphas)])+"\n")
 
-    n_batches_train = 50000 / batch_size
-    n_batches_valid = 10000 / batch_size
+    n_batches_train = 50000 // batch_size
+    n_batches_valid = 10000 // batch_size
 
-    start_time = time.clock()
+    start_time = time.perf_counter()
 
     for epoch in range(n_epochs):
 
         ### TRAINING ###
 
         # CUMULATIVE SUM OF TRAINING ENERGY, TRAINING COST AND TRAINING ERROR
-        measures_sum = [0.,0.,0.]
+        measures_sum = [0., 0., 0.]
         gW = [0.] * len(alphas)
 
-        for index in xrange(n_batches_train):
+        for index in range(n_batches_train):
 
             # CHANGE THE INDEX OF THE MINI BATCH (= CLAMP X AND INITIALIZE THE HIDDEN AND OUTPUT LAYERS WITH THE PERSISTENT PARTICLES)
             net.change_mini_batch_index(index)
@@ -49,10 +50,10 @@ def train_net(net):
 
             # MEASURE THE ENERGY, COST AND ERROR AT THE END OF THE FREE PHASE RELAXATION
             measures = net.measure()
-            measures_sum = [measure_sum + measure for measure_sum,measure in zip(measures_sum,measures)]
+            measures_sum = [measure_sum + measure for measure_sum, measure in zip(measures_sum, measures)]
             measures_avg = [measure_sum / (index+1) for measure_sum in measures_sum]
             measures_avg[-1] *= 100. # measures_avg[-1] corresponds to the error rate, which we want in percentage
-            stdout.write("\r%2i-train-%5i E=%.1f C=%.5f error=%.3f%%" % (epoch, (index+1)*batch_size, measures_avg[0], measures_avg[1], measures_avg[2]))
+            stdout.write("\r%2i-train-%5i E=%.1f C=%.5f error=%.3f%%" % (epoch, (index+1) * batch_size, measures_avg[0], measures_avg[1], measures_avg[2]))
             stdout.flush()
 
             # WEAKLY CLAMPED PHASE
@@ -64,28 +65,28 @@ def train_net(net):
 
         stdout.write("\n")
         dlogW = [100. * gW1 / n_batches_train for gW1 in gW]
-        print "   "+" ".join(["dlogW%i=%.3f%%" % (k+1,dlogW1) for k,dlogW1 in enumerate(dlogW)])
+        print("   "+" ".join(["dlogW%i=%.3f%%" % (k+1,dlogW1) for k,dlogW1 in enumerate(dlogW)]))
 
         net.training_curves["training error"].append(measures_avg[-1])
 
         ### VALIDATION ###
-        
-        # CUMULATIVE SUM OF VALIDATION ENERGY, VALIDATION COST AND VALIDATION ERROR
-        measures_sum = [0.,0.,0.]
 
-        for index in xrange(n_batches_valid):
+        # CUMULATIVE SUM OF VALIDATION ENERGY, VALIDATION COST AND VALIDATION ERROR
+        measures_sum = [0., 0., 0.]
+
+        for index in range(n_batches_valid):
 
             # CHANGE THE INDEX OF THE MINI BATCH (= CLAMP X AND INITIALIZE THE HIDDEN AND OUTPUT LAYERS WITH THE PERSISTENT PARTICLES)
             net.change_mini_batch_index(n_batches_train+index)
 
             # FREE PHASE
             net.free_phase(n_it_neg, epsilon)
-            
+
             # MEASURE THE ENERGY, COST AND ERROR AT THE END OF THE FREE PHASE RELAXATION
             measures = net.measure()
-            measures_sum = [measure_sum + measure for measure_sum,measure in zip(measures_sum,measures)]
+            measures_sum = [measure_sum + measure for measure_sum, measure in zip(measures_sum, measures)]
             measures_avg = [measure_sum / (index+1) for measure_sum in measures_sum]
-            measures_avg[-1] *= 100. # measures_avg[-1] corresponds to the error rate, which we want in percentage
+            measures_avg[-1] *= 100.  # measures_avg[-1] corresponds to the error rate, which we want in percentage
             stdout.write("\r   valid-%5i E=%.1f C=%.5f error=%.2f%%" % ((index+1)*batch_size, measures_avg[0], measures_avg[1], measures_avg[2]))
             stdout.flush()
 
@@ -93,8 +94,8 @@ def train_net(net):
 
         net.training_curves["validation error"].append(measures_avg[-1])
 
-        duration = (time.clock() - start_time) / 60.
-        print("   duration=%.1f min" % (duration))
+        duration = (time.perf_counter() - start_time) / 60.
+        print(("   duration=%.1f min" % (duration)))
 
         # SAVE THE PARAMETERS OF THE NETWORK AT THE END OF THE EPOCH
         net.save_params()

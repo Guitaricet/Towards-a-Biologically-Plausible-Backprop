@@ -14,13 +14,13 @@ def train_net(net):
     n_it_pos     = net.hyperparameters["n_it_pos"]
     alphas       = net.hyperparameters["alphas"]
 
-    print "name = %s" % (path)
-    print "architecture = 784-"+"-".join([str(n) for n in hidden_sizes])+"-10"
-    print "number of epochs = %i" % (n_epochs)
-    print "batch_size = %i" % (batch_size)
-    print "n_it_neg = %i"   % (n_it_neg)
-    print "n_it_pos = %i"   % (n_it_pos)
-    print "learning rates: "+" ".join(["alpha_W%i=%.3f" % (k+1,alpha) for k,alpha in enumerate(alphas)])+"\n"
+    print("name = %s" % (path))
+    print("architecture = 784-"+"-".join([str(n) for n in hidden_sizes])+"-10")
+    print("number of epochs = %i" % (n_epochs))
+    print("batch_size = %i" % (batch_size))
+    print("n_it_neg = %i"   % (n_it_neg))
+    print("n_it_pos = %i"   % (n_it_pos))
+    print("learning rates: "+" ".join(["alpha_W%i=%.3f" % (k+1,alpha) for k,alpha in enumerate(alphas)])+"\n")
 
     n_batches_train = 50000 / batch_size
     n_batches_valid = 10000 / batch_size
@@ -34,7 +34,7 @@ def train_net(net):
         # CUMULATIVE SUM OF TRAINING ENERGY, TRAINING COST AND TRAINING ERROR
         measures_sum = [0.,0.,0.]
 
-        for index in xrange(n_batches_train):
+        for index in range(n_batches_train):
 
             # CHANGE THE INDEX OF THE MINI BATCH (= CLAMP X AND INITIALIZE THE HIDDEN AND OUTPUT LAYERS WITH THE PERSISTENT PARTICLES)
             net.change_mini_batch_index(index)
@@ -62,7 +62,7 @@ def train_net(net):
         # CUMULATIVE SUM OF VALIDATION ENERGY, VALIDATION COST AND VALIDATION ERROR
         measures_sum = [0.,0.,0.]
 
-        for index in xrange(n_batches_valid):
+        for index in range(n_batches_valid):
 
             # CHANGE THE INDEX OF THE MINI BATCH (= CLAMP X AND INITIALIZE THE HIDDEN AND OUTPUT LAYERS WITH THE PERSISTENT PARTICLES)
             net.change_mini_batch_index(n_batches_train+index)
@@ -83,7 +83,7 @@ def train_net(net):
         net.training_curves["validation error"].append(measures_avg[-1])
 
         duration = (time.clock() - start_time) / 60.
-        print("   duration=%.1f min" % (duration))
+        print(("   duration=%.1f min" % (duration)))
 
         # SAVE THE PARAMETERS OF THE NETWORK AT THE END OF THE EPOCH
         net.save_params()

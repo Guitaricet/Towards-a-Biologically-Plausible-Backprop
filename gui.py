@@ -1,4 +1,4 @@
-from Tkinter import *
+from tkinter import *
 from model import Network
 import numpy as np
 from PIL import Image, ImageTk
@@ -67,6 +67,7 @@ class GUI(Tk):
 
             # FREQUENCY OF UPDATES (IN SECONDS)
             time.sleep(.1)
+
 
 if __name__ == "__main__":
 

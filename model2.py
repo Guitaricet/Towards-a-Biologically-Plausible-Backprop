@@ -1,4 +1,4 @@
-import cPickle
+import pickle
 from external_world import External_World
 import numpy as np
 import os
@@ -47,7 +47,7 @@ class Network(object):
         biases_values  = [b.get_value() for b in self.biases]
         weights_values = [W.get_value() for W in self.weights]
         to_dump        = biases_values, weights_values, self.hyperparameters, self.training_curves
-        cPickle.dump(to_dump, f, protocol=cPickle.HIGHEST_PROTOCOL)
+        pickle.dump(to_dump, f, protocol=pickle.HIGHEST_PROTOCOL)
         f.close()
 
     def __load_params(self, hyperparameters):
@@ -69,9 +69,9 @@ class Network(object):
 
         if os.path.isfile(self.path):
             f = file(self.path, 'rb')
-            biases_values, weights_values, hyperparameters, training_curves = cPickle.load(f)
+            biases_values, weights_values, hyperparameters, training_curves = pickle.load(f)
             f.close()
-            for k,v in hyper.iteritems():
+            for k,v in hyper.items():
                 hyperparameters[k]=v
         else:
             layer_sizes = [28*28] + hyperparameters["hidden_sizes"] + [10]
