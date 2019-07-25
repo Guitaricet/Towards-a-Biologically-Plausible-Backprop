@@ -78,7 +78,7 @@ class Network(object):
             return W_values
 
         if os.path.isfile(self.path):
-            f = file(self.path, 'rb')
+            f = open(self.path, 'rb')
             biases_values, weights_values, hyperparameters, training_curves = pickle.load(
                 f)
             f.close()

@@ -33,8 +33,8 @@ class GUI(Tk):
 
     def update_canvas(self, first_time=False):
 
-        units = [(28, 28)] + [(10, n/10) for n in self.hidden_sizes]+[(1, 10)]
-        pixels = [(140, 140)] + [(n/2, 50)
+        units = [(28, 28)] + [(10, n//10) for n in self.hidden_sizes]+[(1, 10)]
+        pixels = [(140, 140)] + [(n//2, 50)
                                  for n in self.hidden_sizes]+[(250, 25)]
 
         arrays = [256*layer.eval().reshape(dimensions)
