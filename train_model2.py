@@ -22,8 +22,8 @@ def train_net(net):
     print("n_it_pos = %i"   % (n_it_pos))
     print("learning rates: "+" ".join(["alpha_W%i=%.3f" % (k+1,alpha) for k,alpha in enumerate(alphas)])+"\n")
 
-    n_batches_train = 50000 / batch_size
-    n_batches_valid = 10000 / batch_size
+    n_batches_train = 50000 // batch_size
+    n_batches_valid = 10000 // batch_size
 
     start_time = time.clock()
 
