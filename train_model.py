@@ -69,9 +69,9 @@ def train_net(net):
             stdout.flush()
 
             _step = epoch*n_batches_train + index
-            experiment.add_metric('energy', measures_avg[0], step=_step)
-            experiment.add_metric('cost', measures_avg[1], step=_step)
-            experiment.add_metric('accuracy', 1 - measures_avg[2], step=_step)
+            experiment.log_metric('energy', measures_avg[0], step=_step)
+            experiment.log_metric('cost', measures_avg[1], step=_step)
+            experiment.log_metric('accuracy', 1 - measures_avg[2], step=_step)
 
             # WEAKLY CLAMPED PHASE
             sign = 2*np.random.randint(0, 2)-1  # random sign +1 or -1
