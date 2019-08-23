@@ -1,3 +1,5 @@
+from comet_ml import Experiment
+
 from model import Network
 import numpy as np
 import sys
@@ -27,6 +29,12 @@ def train_net(net):
     print("beta = %.1f" % (beta))
     print("learning rates: "+" ".join(["alpha_W%i=%.3f" %
                                        (k+1, alpha) for k, alpha in enumerate(alphas)])+"\n")
+
+    experiment = Experiment(project_name='eqprop')
+    experiment.log_parameters({'original_implementation': True,
+                               'net_type': 1,
+                               'max_steps': n_it_neg,
+                               'use_predictors': False})
 
     n_batches_train = 50000 // batch_size
     n_batches_valid = 10000 // batch_size
@@ -59,6 +67,11 @@ def train_net(net):
             stdout.write("\repoch-%2i-train-%5i E=%.1f C=%.5f error=%.3f%%" % (epoch,
                                                                                (index+1) * batch_size, measures_avg[0], measures_avg[1], measures_avg[2]))
             stdout.flush()
+
+            _step = epoch*n_batches_train + index
+            experiment.add_metric('energy', measures_avg[0], step=_step)
+            experiment.add_metric('cost', measures_avg[1], step=_step)
+            experiment.add_metric('accuracy', 1 - measures_avg[2], step=_step)
 
             # WEAKLY CLAMPED PHASE
             sign = 2*np.random.randint(0, 2)-1  # random sign +1 or -1
