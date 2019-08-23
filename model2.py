@@ -52,7 +52,7 @@ class Network(object):
         self.positive_phase = self.__build_positive_phase()
 
     def save_params(self):
-        f = file(self.path, 'wb')
+        f = open(self.path, 'wb')
         biases_values = [b.get_value() for b in self.biases]
         weights_values = [W.get_value() for W in self.weights]
         to_dump = biases_values, weights_values, self.hyperparameters, self.training_curves

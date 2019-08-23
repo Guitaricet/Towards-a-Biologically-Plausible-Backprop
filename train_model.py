@@ -13,8 +13,8 @@ def train_net(net):
     hidden_sizes = net.hyperparameters["hidden_sizes"]
     n_epochs = net.hyperparameters["n_epochs"]
     batch_size = net.hyperparameters["batch_size"]
-    n_it_neg = net.hyperparameters["n_it_neg"]
-    n_it_pos = net.hyperparameters["n_it_pos"]
+    n_it_neg = net.hyperparameters["n_it_neg"]  # n_iterations in free phase
+    n_it_pos = net.hyperparameters["n_it_pos"]  # n_iterations in weekly clamped phase
     epsilon = net.hyperparameters["epsilon"]
     beta = net.hyperparameters["beta"]
     alphas = net.hyperparameters["alphas"]
